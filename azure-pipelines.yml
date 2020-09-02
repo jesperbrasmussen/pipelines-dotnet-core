@@ -11,6 +11,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  azureSubscription: 'Visual Studio Enterprise Subscription – MPN (e449deab-22d0-422d-a5c4-94e05b6d5cb6)'
+  appName: 'apigateway-webapp'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -34,3 +36,11 @@ steps:
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'dotnet-core-demo'
+
+- task: AzureWebApp@1
+  displayName: 'Azure Web App Deploy'
+  inputs:
+    azureSubscription: $(azureSubscription)
+    appType: webAppLinux
+    appName: $(appName)
+    package: $(System.ArtifactsDirectory)/**/*.zip
